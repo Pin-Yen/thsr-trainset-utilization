@@ -94,5 +94,5 @@ Consider this timetable:
 | 114       | B        | 11          | A           | 12           | YES        |
 
 In the maximum flow problem, add those optional nodes in the middle (without connection to the source or sink) as follows:
-
+![directed graph](img/positioning-train-directed-graph.png)
 ## Useful resources
