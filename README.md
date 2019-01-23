@@ -56,14 +56,14 @@ THSR currently has 34 trainsets.
 Statistics obtained from this program (without specifying the positioning train list):
 #### Normal timetable (2018.10.8 -)
 
-| Day        | utilaztion    |
+| Day        | utilization    |
 |------------|---------------|
 | Mon        | 28 trainsets  |
 | Tue-Thu    | 27 trainsets  |
 | Fri-Sun    | 30 trainsets  |
 
 #### 2019 Chinese new year (2019.01.31 - 2019.02.11)
-| Date       | utilaztion    |
+| Date       | utilization    |
 |------------|---------------|
 | 1/31       | 29 trainsets  |
 | 2/1        | 32 trainsets  |
