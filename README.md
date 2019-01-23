@@ -1,7 +1,7 @@
 ## About
 This program calculates the number of train required to cover a given train service schedule.
 
-I was curious about the trainset utilization rate of [Taiwan High Speed Rail](https://www.thsrc.com.tw/index.html), thus decided to write a program to answer this question.
+Curious about [Taiwan High Speed Rail](https://www.thsrc.com.tw/index.html)'s trainset utilization rate, I decided to write a program to solve this question.
 ## Usage
 ### Program usage
 #### Given Service timetable and a list of possible positioning trains
