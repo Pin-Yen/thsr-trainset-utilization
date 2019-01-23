@@ -11,12 +11,12 @@ python3 main.py <service-timetable> <positioning-train-library>
 - [*service-timetable*](#service-timetable): file name of a timetable located in ```data/``` folder
 - [*positioning-train-library*](#positioning-train-library): file name of a list of all possible positioning trains, located in ```data/``` folder.
 
-The alogrithm will choose a set of trains from the positioning train list to minimize the required train sets to cover the whole service timetable.
+The alogrithm will choose a set of trains from the positioning train list to minimize the required trainsets to cover the whole service timetable.
 #### Given Service timetable, without positioning train list
 ```bash
 python3 approxmain.py <service-timetable>
 ```
-Without a specified list of possible positioning trains, the algorith assumes that a trainset can be positioned anytime within the following times:
+Without a specified list of possible positioning trains, the algorith assumes that a trainset can be repositioned anytime within the following times:
 - Nangang ⇄ Taichung: 60 minutes
 - Taichung ⇄ Zuoying: 50 minutes
 ### Data file format
@@ -29,7 +29,7 @@ Each line consists a positioning train with the format:\
 ```<train number> <origin-station> <origin-time> <destination> <destination-time> <conflict-trains>```\
 e.g: ```1455 NAG 20:30 TAC 21:30 1557```
 
-*conflict-trains* is a list of conflicting service trains (specified by train number, seperated by space), , the algorithm will avoid selecting this positioning train when the service trains list contains a train in conflict.
+*conflict-trains* is a list of conflicting service trains (specified by train number, seperated by space), , the algorithm will avoid selecting this positioning train when the service train list contains a train in conflict.
 
 **Tip:** To get better results, Split Nangang ⇄ Zuoying positioning trains into two legs, Nangang ⇄ Taichung and Taichung ⇄ Zuying, respectively. Leave it to the algorithm to decide whether to position a trainset all the way back to Nangang/Zuoying or just to Taichung. 
 
@@ -53,7 +53,7 @@ python3 train-generator.py
 ## Fun facts
 THSR currently has 34 trainsets.
 
-Statistics obtain from this program (without specifying the positioning train list):
+Statistics obtained from this program (without specifying the positioning train list):
 #### Normal timetable (2018.10.8 -)
 
 | Day        | utilaztion    |
