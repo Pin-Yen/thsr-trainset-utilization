@@ -88,10 +88,10 @@ Consider this timetable:
 | 101       | A        | 8           | B           | 9            | Service    |
 | 105       | A        | 9           | B           | 10           | Service    |
 | 406       | B        | 9           | A           | 10           | Positioning|
-| 109       | A        | 10          | B           | 11           | YES        |
-| 110       | B        | 10          | A           | 11           | YES        |
-| 113       | A        | 11          | B           | 12           | YES        |
-| 114       | B        | 11          | A           | 12           | YES        |
+| 109       | A        | 10          | B           | 11           | Service    |
+| 110       | B        | 10          | A           | 11           | Service    |
+| 113       | A        | 11          | B           | 12           | Service    |
+| 114       | B        | 11          | A           | 12           | Service    |
 
 In the maximum flow problem, add those optional nodes in the middle (without connection to the source or sink) as follows:
 ![directed graph](img/positioning-train-directed-graph.png)
