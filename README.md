@@ -60,7 +60,8 @@ Statistics obtained from this program (without specifying the positioning train 
 |------------|---------------|
 | Mon        | 28 trainsets  |
 | Tue-Thu    | 27 trainsets  |
-| Fri-Sun    | 30 trainsets  |
+| Fri, Sun   | 30 trainsets  |
+| Sat        | 29 trainsets  |
 
 #### 2019 Chinese new year (2019.01.31 - 2019.02.11)
 | Date       | utilization    |
