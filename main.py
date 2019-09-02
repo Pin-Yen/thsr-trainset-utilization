@@ -117,11 +117,11 @@ def main():
     required_trainsets = len(service_trains) - flow
     print("Required trainsets:", required_trainsets)
 
-    rosters = create_roster(service_trains, original_graph, graph)
+    rosters = create_roster(service_trains, positioning_trains, original_graph, graph)
 
     print('roster = ' + json.dumps(rosters))
 
-def create_roster(service_trains, original_graph, residual_graph):
+def create_roster(service_trains, positioning_trains, original_graph, residual_graph):
     
     ## First, chain trains together according to original graph and residual graph.
     for u in range(2, original_graph.size):
@@ -134,6 +134,7 @@ def create_roster(service_trains, original_graph, residual_graph):
                 first_train.next_train = second_train
                 second_train.prev_train = first_train
     
+    enforce_fifo(service_trains, positioning_trains)
 
     ## Second, collect the "chain-of-trains"
     rosters = []
@@ -156,8 +157,41 @@ def create_roster(service_trains, original_graph, residual_graph):
     return rosters
 
 
-# def enforce_fifo(train_list):
-#     for train in 
+def enforce_fifo(service_trains, positioning_trains):
+    all_trains = service_trains + positioning_trains
+    all_trains.sort(key=lambda t: t.origin_time) # sort train by dept time
+    trains_by_origin = sorted(all_trains, key=lambda t: t.origin_time)
+    trains_by_dest = sorted(all_trains, key=lambda t: t.dest_time)
+
+    for train in trains_by_dest:
+        # TODO: use only service trains and selected non-revenue trains instead of all trains
+        if train.next_train == None:
+            continue
+
+        next_candidates = list(filter(lambda t: train.can_be_next(t), trains_by_origin))
+
+        if not next_candidates:
+            continue
+
+        for next_candidate in next_candidates:
+            if not next_candidate.prev_train:
+                continue
+            if next_candidate.origin_time >= train.next_train.origin_time:
+                break
+            else:
+                if next_candidate.prev_train.origin_time > train.origin_time:
+                    # train & next_candidate.prev_train violates FIFO principle
+                    # swap
+                    parent1, parent2 = train, next_candidate.prev_train
+                    child1 ,child2 = train.next_train, next_candidate
+                    print('swap !!!')
+                    print(parent1.train_no, parent1.dest_time, '-> (new)', child2.train_no, child2.origin_time)
+                    print(parent2.train_no, parent2.dest_time, '-> (new)', child1.train_no, child1.origin_time)
+                    i = input('.')
+                    parent1.next_train = child2
+                    parent2.prev_train = child1
+                    break
+
 
 if __name__ == '__main__':
     if (len(sys.argv) < 3):
