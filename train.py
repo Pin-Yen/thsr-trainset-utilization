@@ -13,6 +13,10 @@ class Train(object):
         self.bottom_node = None
         self.conflict_trains = []
 
+        ## assigned by rostering algorithm
+        self.prev_train = None
+        self.next_train = None
+
     def can_be_next(self, next_train):
         return (self.dest == next_train.origin)\
          and (self.end_time <= next_train.start_time)\

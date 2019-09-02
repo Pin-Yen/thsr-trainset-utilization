@@ -1,3 +1,4 @@
+
 class Graph(object):
     """docstring for Graph"""
     def __init__(self, matrix, s, t):
@@ -8,6 +9,7 @@ class Graph(object):
 
     def link(self, u, v):
         self.matrix[u][v] = 1
+
 
 def dfs(graph, current_node, parent_list, parent_set):
     if current_node == graph.t:
@@ -27,6 +29,8 @@ def dfs(graph, current_node, parent_list, parent_set):
     return False
 
 def ford_fulkerson(graph):
+    # returns maximum flow of graph
+    # Note: graph flow is modified to residual graph.
 
     parent_list = [graph.s]
     parent_set = {graph.s}
