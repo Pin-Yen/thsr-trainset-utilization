@@ -56,14 +56,15 @@ THSR currently has 34 trainsets.
 Statistics obtained from this program (without specifying the positioning train list):
 #### Normal timetable (2018.10.8 -)
 
-| Day        | utilaztion    |
+| Day        | utilization    |
 |------------|---------------|
 | Mon        | 28 trainsets  |
 | Tue-Thu    | 27 trainsets  |
-| Fri-Sun    | 30 trainsets  |
+| Fri, Sun   | 30 trainsets  |
+| Sat        | 29 trainsets  |
 
 #### 2019 Chinese new year (2019.01.31 - 2019.02.11)
-| Date       | utilaztion    |
+| Date       | utilization    |
 |------------|---------------|
 | 1/31       | 29 trainsets  |
 | 2/1        | 32 trainsets  |
@@ -88,10 +89,10 @@ Consider this timetable:
 | 101       | A        | 8           | B           | 9            | Service    |
 | 105       | A        | 9           | B           | 10           | Service    |
 | 406       | B        | 9           | A           | 10           | Positioning|
-| 109       | A        | 10          | B           | 11           | YES        |
-| 110       | B        | 10          | A           | 11           | YES        |
-| 113       | A        | 11          | B           | 12           | YES        |
-| 114       | B        | 11          | A           | 12           | YES        |
+| 109       | A        | 10          | B           | 11           | Service    |
+| 110       | B        | 10          | A           | 11           | Service    |
+| 113       | A        | 11          | B           | 12           | Service    |
+| 114       | B        | 11          | A           | 12           | Service    |
 
 In the maximum flow problem, add those optional nodes in the middle (without connection to the source or sink) as follows:
 ![directed graph](img/positioning-train-directed-graph.png)
