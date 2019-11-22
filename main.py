@@ -81,7 +81,7 @@ def main():
 
     positioning_trains = remove_conflict_positioning_trains(service_trains, positioning_trains)
 
-    # number of nodes =  (source + sink) + 2*number_of_trains
+    # number of nodes =  (source + sink) + 2*(number_of_service_train + number_of_positioning_train)
     number_of_nodes = 2 + 2*(len(service_trains) + len(positioning_trains))
    
     graph = TrainGraph([[0 for _ in range(number_of_nodes)] for _ in range(number_of_nodes)], 0, 1)
@@ -92,6 +92,7 @@ def main():
         train.bottom_node = node_counter.next_number()
         graph.map_train(train.top_node, train)
         graph.map_train(train.bottom_node, train)
+
 
     for train in service_trains:
         graph.link(source, train.top_node)
@@ -109,8 +110,13 @@ def main():
         for next_train in filter(lambda t: train.can_be_next(t), service_trains):
             graph.link(train.bottom_node, next_train.bottom_node)
 
-        for next_train in filter(lambda t: train.can_be_next(t), positioning_trains):
-            graph.link(train.bottom_node, next_train.top_node)
+        
+        next_positioning_trains = list(filter(lambda t: train.can_be_next(t), positioning_trains))
+
+        if next_positioning_trains:
+            next_positioning_train = min(next_positioning_trains, key=lambda t: t.origin_time)
+            graph.link(train.bottom_node, next_positioning_train.top_node)
+
 
     original_graph = copy.deepcopy(graph)
     flow = ford_fulkerson(graph)
@@ -131,10 +137,15 @@ def create_roster(service_trains, positioning_trains, original_graph, residual_g
                 second_train = residual_graph.node_to_train[v]
 
                 # chain trains together
-                first_train.next_train = second_train
-                second_train.prev_train = first_train
-    
-    enforce_fifo(service_trains, positioning_trains)
+                if not first_train == second_train:
+                    first_train.next_train = second_train
+                    second_train.prev_train = first_train
+    modified = True
+    while modified:
+        modified = False
+        enforce_fifo(service_trains, positioning_trains)
+        modified = enforce_no_idle(positioning_trains)
+
 
     ## Second, collect the "chain-of-trains"
     rosters = []
@@ -148,6 +159,7 @@ def create_roster(service_trains, positioning_trains, original_graph, residual_g
             
             next_train = train.next_train
             while next_train:
+
                 roster.add_duty(next_train)
                 next_train = next_train.next_train
 
@@ -158,8 +170,9 @@ def create_roster(service_trains, positioning_trains, original_graph, residual_g
 
 
 def enforce_fifo(service_trains, positioning_trains):
+    modified = False
+
     all_trains = service_trains + positioning_trains
-    all_trains.sort(key=lambda t: t.origin_time) # sort train by dept time
     trains_by_origin = sorted(all_trains, key=lambda t: t.origin_time)
     trains_by_dest = sorted(all_trains, key=lambda t: t.dest_time)
 
@@ -179,18 +192,54 @@ def enforce_fifo(service_trains, positioning_trains):
             if next_candidate.origin_time >= train.next_train.origin_time:
                 break
             else:
-                if next_candidate.prev_train.origin_time > train.origin_time:
+                if next_candidate.prev_train.dest_time > train.dest_time:
                     # train & next_candidate.prev_train violates FIFO principle
                     # swap
+                    modified = True
                     parent1, parent2 = train, next_candidate.prev_train
                     child1 ,child2 = train.next_train, next_candidate
                     print('swap !!!')
                     print(parent1.train_no, parent1.dest_time, '-> (new)', child2.train_no, child2.origin_time)
                     print(parent2.train_no, parent2.dest_time, '-> (new)', child1.train_no, child1.origin_time)
-                    i = input('.')
+                    # i = input('.')
+                    # parent1.swap = True
+                    # parent2.swap = True
+
                     parent1.next_train = child2
-                    parent2.prev_train = child1
+                    child2.prev_train = parent1
+                    parent2.next_train = child1
+                    child1.prev_train = parent2
                     break
+    return modified
+
+
+def enforce_no_idle(positioning_trains):
+    modified = False
+
+    positioning_trains = sorted(positioning_trains, key=lambda t: t.origin_time)
+    
+    for train in positioning_trains:
+        # If next train is also a positioning train, make sure it is the earilst one
+        if not train.next_train:
+            continue
+        if not train.next_train.in_service:
+            can_be_next_positioning = list(filter(lambda t: train.can_be_next(t), positioning_trains))
+            if train.next_train != can_be_next_positioning[0]:
+                for next_train_candidate in can_be_next_positioning:
+                    if next_train_candidate == train.next_train:
+                        break
+                    if not next_train_candidate.prev_train:
+                        # swap
+                        modified = True
+                        old_next_train = train.next_train
+                        train.next_train = next_train_candidate
+                        next_train_candidate.prev_train = train
+                        next_train_candidate.next_train = old_next_train.next_train
+                        old_next_train.next_train = None
+                        old_next_train.prev_train = None
+                        break
+
+    return modified
 
 
 if __name__ == '__main__':
